@@ -84,6 +84,7 @@
             margin-bottom: 25px;
             text-align: left;
             position: relative;
+            width: 100%; /* Assurer que le groupe de formulaire prend toute la largeur */
         }
         .form-group label {
             display: block;
@@ -201,26 +202,39 @@
             margin-top: 20px;
             width: 80%; /* Réduire la largeur du clavier */
             margin: 0 auto; /* Centrer le clavier */
+            padding: 20px; /* Ajouter un padding pour un meilleur espacement */
+            background-color: #f0f0f0; /* Fond gris clair pour le clavier */
+            border-radius: 15px; /* Coins arrondis */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            animation: fadeIn 0.5s ease-in-out; /* Animation d'apparition */
         }
         .numeric-keyboard button {
             padding: 20px;
             font-size: 18px;
             border: none;
             border-radius: 12px;
-            background-color: #444; /* Boutons sombres */
+            background: linear-gradient(135deg, #444, #333); /* Dégradé sombre */
             color: #ffffff; /* Texte blanc */
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
         }
         .numeric-keyboard button:hover {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Dégradé bleu au survol */
+            transform: translateY(-2px); /* Effet de levée */
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3); /* Ombre portée accentuée */
+        }
+        .numeric-keyboard button:active {
+            transform: translateY(0); /* Retour à la position initiale au clic */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
         }
         .keyboard-toggle {
-            margin-top: 10px;
+            margin-top: 20px; /* Espacement entre la case du mot de passe et les boutons */
             display: flex;
             justify-content: space-around;
             width: 80%; /* Réduire la largeur des boutons */
             margin: 0 auto; /* Centrer les boutons */
+            gap: 20px; /* Espace entre les boutons */
         }
         .keyboard-toggle button {
             padding: 10px 20px;
