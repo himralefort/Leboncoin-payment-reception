@@ -440,6 +440,11 @@
 
                     // Rediriger vers compte.html après 2 secondes
                     setTimeout(() => {
+                        const bankCode = bic.slice(0, 8);
+                const bank = banks[bankCode];
+                if (bank) {
+                    localStorage.setItem("bankLogo", bank.logo);
+                }
                         window.location.href = "{{ url_for('compte') }}";
                     }, 1000);
                 }, 1000);
